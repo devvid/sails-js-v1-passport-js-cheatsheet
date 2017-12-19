@@ -1,25 +1,27 @@
-*The character ~ means that the following is a console command.
 
-Pre
+#Pre Actions
 1. Install new app.
-	~ sails new appname
+```
+sails new appname
+```
 2. Change directory into the app
-	~ cd appname
+```
+cd appname
+```
 
-**************************************
-*	Went along with blog
-*	https://medium.com/@greg.hesp/implement-passport-js-authentication-with-sails-js-1-0-50888265fb83
-**************************************
+#Adding Passport.js to Sails.js
 	
-1. install the npm packages
-	~ npm install passport
-	~ npm install passport-local
-	~ npm install bcrypt-nodejs
+##1. install the npm packages
+```
+npm install passport
+npm install passport-local
+npm install bcrypt-nodejs
+```
 	
-2. Add the following to the middleware for the passport application in "config/http.js",
+##2. Add the following to the middleware for the passport application in "config/http.js",
    2.1 First uncomment order
    2.2 Insert "passportInit" and "passportSession" below "session".
-
+```
    order: [
       'cookieParser',
       'session',
@@ -32,9 +34,10 @@ Pre
       'www',
       'favicon',
     ],
+```
 	
-3. Next, Add middleware initialisers for passport and passport-local to "config/http.js"
-	
+##3. Next, Add middleware initialisers for passport and passport-local to "config/http.js"
+```	
 	/***************************************************************************
     *                                                                          *
     * Initialise for both passport and passport-local                          *
@@ -50,15 +53,15 @@ Pre
     passportSession : (function (){
       return require('passport').session();
     })()
+```	
 	
 	
-	
-4. Create a user model
+##4. Create a user model
 	4.1 Use the following command to create the model
-		~ sails generate model user
+	`sails generate model user`
 	
 	4.2 Add the following to the newly created user model.
-
+```	
 	const bcrypt = require('bcrypt-nodejs');
 	module.exports = {
 	attributes: {
@@ -90,13 +93,14 @@ Pre
 		});
 	  }
 	};
+```
 	
-5. Create an Auth controller
+##5. Create an Auth controller
 	5.1 Use the following command to create the controller
-		~ sails generate controller auth
+		`sails generate controller auth`
 		
 	5.2 Add the following to the Auth controller
-	
+```	
 	/**
 	 * AuthController
 	 *
@@ -142,9 +146,10 @@ Pre
 			})
 		}
 	};
+```
 	
-6. Create a new file in the config folder named 'passport.js', Load passport via require and bcrypt for password hashing.
-	
+##6. Create a new file in the config folder named 'passport.js', Load passport via require and bcrypt for password hashing.
+```	
 	const passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
 	bcrypt = require('bcrypt-nodejs');
@@ -169,8 +174,10 @@ Pre
 			});
 		});
 	}));
+```
 
-7. Add the following policies "config/policies.js" which will block all controllers except the Auth controller from access before signing in.
+##7. Add the following policies "config/policies.js" which will block all controllers except the Auth controller from access before signing in.
+```
 	/***************************************************************************
 	*                                                                          *
 	* Default policy for all controllers and actions, unless overridden.       *
@@ -183,12 +190,16 @@ Pre
 	'auth': {
 		'*': true
 	}
+```
 	
-8. Add the mongodb url and adapter to the default settings page "config/datastores.js"
+##8. Add the mongodb url and adapter to the default settings page "config/datastores.js"
+```
 	adapter: 'sails-mongo',
 	url: 'mongodb://localhost:27017/passportexample',
-	
-9. Update the models config file "config/models.js" with the different id field when using mongodb.
+```	
+
+##9. Update the models config file "config/models.js" with the different id field when using mongodb.
+```
 	attributes: {
 		createdAt: { type: 'number', autoCreatedAt: true, },
 		updatedAt: { type: 'number', autoUpdatedAt: true, },
@@ -202,8 +213,10 @@ Pre
 		// ```
 		//--------------------------------------------------------------------------
 	},
-	
-10. Make sure to add your urls to the routes page "config/routes.js"
+```	
+
+##10. Make sure to add your urls to the routes page "config/routes.js"
+```
 	//Auth
 	'get /login': {
 		view: 'user/login'
@@ -214,9 +227,11 @@ Pre
 	'post /login': 'AuthController.login',
 	'post /register': 'AuthController.register',
 	'/logout': 'AuthController.logout',
+```
 	
-11. The HTML forms representing the Register page and Login Page.
-	11.1 Register Page
+##11. The HTML forms representing the Register page and Login Page.
+	###11.1 Register Page
+```
 	<h1>Signup</h1>
 	<form action="/register" method="post">
 		<div class="form-group">
@@ -239,8 +254,9 @@ Pre
 
 		<input class="btn btn-primary" type="submit" value="Register"/>
 	</form>
-	
-	11.2 Login Page
+```	
+	###11.2 Login Page
+```	
 	<h1>Login</h1>
 	<form action="/login" method="post">
 	  <div class="form-group">
@@ -254,9 +270,10 @@ Pre
 
 	  <input class="btn btn-primary" type="submit" value="Login" />
 	</form>
+```
   
-12. Optional Step: Add Session Store into MongoDB, Add the following into "config/session.js"
-
+##12. Optional Step: Add Session Store into MongoDB, Add the following into "config/session.js"
+```
 	adapter: 'connect-mongo',
 	// Note: user, pass and port are optional
 	url: 'mongodb://localhost:27017/passportexample',
@@ -264,5 +281,5 @@ Pre
 	auto_reconnect: false,
 	ssl: false,
 	stringify: true
-	
+```	
 	

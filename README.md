@@ -1,4 +1,5 @@
-# Adding Passport.js to Sails.js
+# Quick Cheatsheet for Adding Passport.js to a Sails.js version 1.0 Application
+cheatsheet version 1.3
 
 ## Pre Actions
 Creating a new sails application

@@ -191,14 +191,55 @@ npm install bcrypt-nodejs
 		'*': true
 	}
 ```
+## 8. Create a new file in "api/policies/" called "authenticated.js"
+Past in the below code which handles checking if the current user is login and allowed to continue to view the hidden pages.
+```
+// We use passport to determine if we're authenticated
+module.exports = function(req, res, next) {
+    
+    'use strict';
+
+    // Sockets
+    if(req.isSocket)
+    {
+        if(req.session &&
+        req.session.passport &&
+        req.session.passport.user)
+        {
+            return next();
+        }
+
+        res.json(401);
+    }
+    // HTTP
+    else
+    {
+        if(req.isAuthenticated())
+        {
+            return next();
+        }
+        
+        // If you are using a traditional, server-generated UI then uncomment out this code:
+        res.redirect('/explore');
+        
+
+        // If you are using a single-page client-side architecture and will login via socket or Ajax, then uncomment out this code:
+        /*
+        res.status(401);
+        res.end();
+        */
+    }
+
+};
+```
 	
-## 8. Add the mongodb url and adapter to the default settings page "config/datastores.js"
+## 9. Add the mongodb url and adapter to the default settings page "config/datastores.js"
 ```
 	adapter: 'sails-mongo',
 	url: 'mongodb://localhost:27017/passportexample',
 ```	
 
-## 9. Update the models config file "config/models.js" with the different id field when using mongodb.
+## 10. Update the models config file "config/models.js" with the different id field when using mongodb.
 ```
 	attributes: {
 		createdAt: { type: 'number', autoCreatedAt: true, },
@@ -215,7 +256,7 @@ npm install bcrypt-nodejs
 	},
 ```	
 
-## 10. Make sure to add your urls to the routes page "config/routes.js"
+## 11. Make sure to add your urls to the routes page "config/routes.js"
 ```
 	//Auth
 	'get /login': {
@@ -229,8 +270,8 @@ npm install bcrypt-nodejs
 	'/logout': 'AuthController.logout',
 ```
 	
-## 11. The HTML forms representing the Register page and Login Page.
-	### 11.1 Register Page
+## 12. The HTML forms representing the Register page and Login Page.
+	### 12.1 Register Page
 ```
 	<h1>Signup</h1>
 	<form action="/register" method="post">
@@ -255,7 +296,7 @@ npm install bcrypt-nodejs
 		<input class="btn btn-primary" type="submit" value="Register"/>
 	</form>
 ```	
-	### 11.2 Login Page
+	### 12.2 Login Page
 ```	
 	<h1>Login</h1>
 	<form action="/login" method="post">
@@ -272,7 +313,7 @@ npm install bcrypt-nodejs
 	</form>
 ```
   
-## 12. Optional Step: Add Session Store into MongoDB, Add the following into "config/session.js"
+## 13. Optional Step: Add Session Store into MongoDB, Add the following into "config/session.js"
 ```
 	adapter: 'connect-mongo',
 	// Note: user, pass and port are optional

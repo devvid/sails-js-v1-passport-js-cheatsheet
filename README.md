@@ -75,15 +75,13 @@ Create a new user model with the command and template
 	const bcrypt = require('bcrypt-nodejs');
 	module.exports = {
 	attributes: {
-		email: {
-		  type: 'email',
-		  required: true,
-		  unique: true
-		},
 		username: {
 		  type: 'string',
-		  required: true,
-		  unique: true
+		  required: true
+		},
+		email: {
+		  type: 'string',
+		  required: true
 		},
 		password: {
 		  type: 'string',

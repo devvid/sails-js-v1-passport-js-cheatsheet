@@ -148,7 +148,7 @@ Create a new auth controller with the command and template
 				description: req.body.description
 			}
 			User.create(data).fetch().exec(function(err, user){
-				if (err) return res.negoiate(err);
+				if (err) return res.negotiate(err);
 
 				//TODO: Maybe send confirmation email to the user before login
 				req.login(user, function(err){
